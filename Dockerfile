@@ -22,23 +22,36 @@ RUN make
 # Final image
 FROM alpine:edge
 
-ENV TERRAD_HOME=/.terrad
 
 # Install ca-certificates
-RUN apk add --update ca-certificates rsync jq curl
+RUN apk add --no-cache --update ca-certificates supervisor
+
+# Temp directory for copying binaries
+RUN mkdir -p /tmp/bin
+WORKDIR /tmp/bin
 
 # Copy over binaries from the build-env
-COPY --from=build-env /go/bin/terrad /tmp
-COPY --from=build-env /go/bin/terracli /tmp
+COPY --from=build-env /go/bin/terrad /tmp/bin
+COPY --from=build-env /go/bin/terracli /tmp/bin
+RUN install -m 0755 -o root -g root -t /usr/local/bin terrad
+RUN install -m 0755 -o root -g root -t /usr/local/bin terracli
 
-WORKDIR /tmp
 
-RUN install -m 0755 -o root -g root -t /usr/local/bin `find . -maxdepth 1 -executable -type f`
+# Remove temp files
+RUN rm -r /tmp/bin
 
+# Add supervisor configuration files
+RUN mkdir -p /etc/supervisor/conf.d/
+COPY /supervisor/supervisord.conf /etc/supervisor/supervisord.conf 
+COPY /supervisor/conf.d/* /etc/supervisor/conf.d/
+
+ENV TERRAD_HOME=/.terrad
 WORKDIR $TERRAD_HOME
 
 EXPOSE 26656 26657 26658
 EXPOSE 1317
+
+# VOLUME [ /.terrad ]
 
 ADD ./scripts/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod u+x /usr/local/bin/entrypoint.sh

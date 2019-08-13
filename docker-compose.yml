@@ -8,12 +8,18 @@ services:
     container_name: terra-node
     environment: 
       - MONIKER=NodeName
+      - CHAIN_ID=columbus-2
+      - BOOTSTRAP=TRUE
+      - TERRAD_HOME=/.terrad
+      # - SEEDS=535222fdb795df6653934f22b8e5f16fdfacc9f6@seed.terra.de-light.io:26656
       # - GENESIS_URL= comment out for default 13003 (give url for cosmoshub-1)
+    restart: always
     ports:
       - "26656:26656"
       - "26657:26657"
       - "26658:26658"
-      - "1317:1317"
-    # volumes:
-    #   - ./data/config:/.terrad/config
-    #   - ./data/keys:/.terracli/keys
+      - "1317:1317" # for rest-server
+    volumes:
+      - terra-data:/.terrad
+volumes:
+  terra-data:
