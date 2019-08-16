@@ -347,7 +347,7 @@ if [ ! -z "$LCD_PORT" ]; then
 
 cat > supervisor-terracli.conf << EOF
 [program:terracli]
-command=terracli rest-server --laddr tcp://0.0.0.0:${LCD_PORT:-1317} --home=${TERRAD_HOME:-/.terrad} --trust-node --node=tcp://0.0.0.0:${RPC_LADDR_PORT:-26657}"
+command=terracli rest-server --laddr tcp://0.0.0.0:${LCD_PORT:-1317} --home=${TERRAD_HOME:-/.terrad} --trust-node --node=tcp://0.0.0.0:${RPC_LADDR_PORT:-26657}
 redirect_stderr=true
 EOF
 
