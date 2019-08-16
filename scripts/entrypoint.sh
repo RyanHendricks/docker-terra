@@ -332,11 +332,10 @@ cd $TERRAD_HOME
 
   if [ "$BOOTSTRAP" == "TRUE" ]; then
     echo "bootstrapping... this will take some time."
-    wget 	http://quicksync.chainlayer.io/terra/columbus-2.20190812.0215.tar.lz4
-    lz4 -d -v --rm columbus-2.20190812.0215.tar.lz4 | tar xf -
+    wget 	https://storage.googleapis.com/node-bootstraps/columbus-2.tar.lz4
+    lz4 -d -v --rm columbus-2.tar.lz4 | tar xf -
   else
-      echo "not bootstrapping..."
-
+      echo "bootstrap ENV variable != TRUE -->  syncing chain from genesis..."
   fi
 
 fi
