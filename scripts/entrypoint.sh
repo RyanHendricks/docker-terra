@@ -18,13 +18,8 @@ then
   if [ ! -z "$GENESIS_URL" ]; then
     wget $GENESIS_URL
   else
-    # # Columbus
-    # wget https://raw.githubusercontent.com/terra-project/networks/master/columbus-drill/genesis.json
-    
     # Mainnet
-    wget https://raw.githubusercontent.com/terra-project/launch/master/columbus-2/columbus-2-genesis.json
-    cp columbus-2-genesis.json genesis.json
-    rm columbus-2-genesis.json
+    wget https://columbus-genesis.s3-ap-northeast-1.amazonaws.com/genesis.json
   fi
 
 # if [ -f "$TERRAD_HOME/config/genesis.json" ]; then
@@ -43,7 +38,7 @@ cat > config.toml << EOF
 
 # TCP or UNIX socket address of the ABCI application,
 # or the name of an ABCI application compiled in with the Tendermint binary
-proxy_app = "tcp://0.0.0.0:${PROXY_APP_PORT:-26658}"
+proxy_app = "${PROXY_APP:-tcp://0.0.0.0:26658}"
 
 # A custom human readable name for this node
 moniker = "${MONIKER:-moniker}"
@@ -54,7 +49,7 @@ moniker = "${MONIKER:-moniker}"
 fast_sync = ${FAST_SYNC:-true}
 
 # Database backend: leveldb | memdb | cleveldb
-db_backend = "${DB_BACKEND:-leveldb}"
+db_backend = "${DB_BACKEND:-goleveldb}"
 
 # Database directory
 db_dir = "${DB_DIR:-data}"
@@ -62,8 +57,7 @@ db_dir = "${DB_DIR:-data}"
 # Output level for logging, including package level options
 log_level = "${LOG_LEVEL:-main:info,state:info,*:error}"
 
-# Output format: 'plain' (colored text) or 'json'
-log_format = "plain"
+log_format = "${LOG_FORMAT:-plain}"
 
 ##### additional base config options #####
 
@@ -99,7 +93,7 @@ filter_peers = ${FILTER_PEERS:-false}
 [rpc]
 
 # TCP or UNIX socket address for the RPC server to listen on
-laddr = "tcp://0.0.0.0:${RPC_LADDR_PORT:-26657}"
+laddr = "${RPC_LADDR:-tcp://0.0.0.0:26657}"
 
 
 # A list of origins a cross-domain request can be executed from
@@ -156,6 +150,13 @@ max_subscriptions_per_client = ${MAX_SUBSCRIPTION_PER_CLIENT:-5}
 # See https://github.com/tendermint/tendermint/issues/3435
 timeout_broadcast_tx_commit = "${TIMEOUT_BROADCAST_TX_COMMIT:-10s}"
 
+
+# Maximum size of request body, in bytes
+max_body_bytes = ${MAX_SIZE_REQUEST_BODY:-1000000}
+
+# Maximum size of request header, in bytes
+max_header_bytes = ${MAX_SIZE_REQUEST_HEADER:-1048576}
+
 # The name of a file containing certificate that is used to create the HTTPS server.
 # If the certificate is signed by a certificate authority,
 # the certFile should be the concatenation of the server's certificate, any intermediates,
@@ -172,7 +173,7 @@ tls_key_file = "${TLS_KEY_FILE:-}"
 [p2p]
 
 # Address to listen for incoming connections
-laddr = "tcp://0.0.0.0:${CONNECTIONS_LADDR_PORT:-26656}"
+laddr = "${P2P_LADDR:-tcp://0.0.0.0:26656}"
 
 # Address to advertise to peers for them to dial
 # If empty, will use the same port as the laddr,
@@ -181,10 +182,10 @@ laddr = "tcp://0.0.0.0:${CONNECTIONS_LADDR_PORT:-26656}"
 external_address = "${EXTERNAL_ADDRESS:-}"
 
 # Comma separated list of seed nodes to connect to
-seeds = "${SEEDS:-35b9658ca14dd4908b37f327870cbd5007ee06f1@116.203.146.149:26656, c24f496b951148697f8a24fd749786075c128f00@35.203.176.214:26656, 6be0856f6365559fdc2e9e97a07d609f754632b0@cosmos-gaia-13004-seed.nodes.polychainlabs.com:26656}"
+seeds = "${SEEDS:-}"
 
 # Comma separated list of nodes to keep persistent connections to
-persistent_peers = "${PERSISTENT_PEERS:-35b9658ca14dd4908b37f327870cbd5007ee06f1@116.203.146.149:26656, c24f496b951148697f8a24fd749786075c128f00@35.203.176.214:26656, 6be0856f6365559fdc2e9e97a07d609f754632b0@cosmos-gaia-13004-seed.nodes.polychainlabs.com:26656}"
+persistent_peers = "${PERSISTENT_PEERS:-}"
 
 # UPNP port forwarding
 upnp = ${UPNP:-false}
@@ -194,13 +195,13 @@ addr_book_file = "${ADDR_BOOK_FILE:-config/addrbook.json}"
 
 # Set true for strict address routability rules
 # Set false for private or local networks
-addr_book_strict = ${ADDR_BOOK_STRICT:-false}
+addr_book_strict = ${ADDR_BOOK_STRICT:-true}
 
 # Maximum number of inbound peers
 max_num_inbound_peers = ${MAX_NUM_INBOUND_PEERS:-40}
 
 # Maximum number of outbound peers to connect to, excluding persistent peers
-max_num_outbound_peers = ${MAX_NUM_OUTBOUND_PEERS:-40}
+max_num_outbound_peers = ${MAX_NUM_OUTBOUND_PEERS:-10}
 
 # Time to wait before flushing messages out on the connection
 flush_throttle_timeout = "${FLUSH_THROTTLE_TIMEOUT:-100ms}"
@@ -251,6 +252,20 @@ max_txs_bytes = ${MAX_TXS_BYTES:-1073741824}
 # size of the cache (used to filter transactions we saw earlier)
 cache_size = ${CACHE_SIZE:-10000}
 
+
+# Maximum size of a single transaction.
+max_tx_bytes = ${MAX_TX_BYTES:-1048576}
+
+##### fast sync configuration options #####
+[fastsync]
+
+# Fast Sync version to use:
+#   1) "v0" (default) - the legacy fast sync implementation
+#   2) "v1" - refactor of v0 version for better testability
+version = "${FAST_SYNC_VERSION:-v0}"
+
+
+
 ##### consensus configuration options #####
 [consensus]
 
@@ -284,7 +299,7 @@ peer_query_maj23_sleep_duration = "${PEER_QUERY_MAJ23_SLEEP_DURATION:-2s}"
 # Options:
 #   1) "null" (default)
 #   2) "kv" - the simplest possible indexer, backed by key-value storage (defaults to levelDB; see DBBackend).
-indexer = "${INDEXER:-kv}"
+indexer = "${INDEXER_SELECTION:-kv}"
 
 # Comma-separated list of tags to index (by default the only tag is "tx.hash")
 #
@@ -293,7 +308,7 @@ indexer = "${INDEXER:-kv}"
 # It's recommended to index only a subset of tags due to possible memory
 # bloat. This is, of course, depends on the indexer's DB and the volume of
 # transactions.
-# index_tags = "${INDEX_TAGS:-tx.height,tx.hash,tx.events,tx.data,tx.info}"
+# index_tags = "${INDEX_TAGS:-}"
 
 # When set to true, tells indexer to index all tags (predefined tags:
 # "tx.hash", "tx.height" and all tags from DeliverTx responses).
@@ -318,10 +333,10 @@ prometheus_listen_addr = ":${PROMETHEUS_PORT:-26660}"
 # If you want to accept more significant number than the default, make sure
 # you increase your OS limits.
 # 0 - unlimited.
-max_open_connections = ${MAX_OPEN_CONNECTIONS:-0}
+max_open_connections = ${MAX_OPEN_CONNECTIONS:-3}
 
 # Instrumentation namespace
-namespace = "${NAMESPACE:-tendermint}"
+namespace = "${INSTRUMENTATION_NAMESPACE:-tendermint}"
 
 
 EOF
@@ -330,13 +345,13 @@ EOF
 
 cd $TERRAD_HOME
 
-  if [ "$BOOTSTRAP" == "TRUE" ]; then
-    echo "bootstrapping... this will take some time."
-    wget 	https://storage.googleapis.com/node-bootstraps/columbus-2.tar.lz4
-    lz4 -d -v --rm columbus-2.20190924.0215.tar.lz4 | tar xf -
-  else
-      echo "bootstrap ENV variable != TRUE -->  syncing chain from genesis..."
-  fi
+  # if [ "$BOOTSTRAP" == "TRUE" ]; then
+  #   echo "bootstrapping... this will take some time."
+  #   wget 	https://storage.googleapis.com/node-bootstraps/columbus-2.tar.lz4
+  #   lz4 -d -v --rm columbus-2.20190924.0215.tar.lz4 | tar xf -
+  # else
+  #     echo "bootstrap ENV variable != TRUE -->  syncing chain from genesis..."
+  # fi
 
 fi
 
