@@ -3,7 +3,7 @@ FROM golang:1.13-alpine AS build-env
 # Modified from original terra-project/core Dockerfile
 
 ENV PACKAGES curl make git libc-dev bash gcc linux-headers eudev-dev
-ENV BRANCH=v0.3.0
+ENV BRANCH=master
 
 # Set up dependencies
 RUN apk add --no-cache $PACKAGES
@@ -17,7 +17,7 @@ WORKDIR /go/src/github.com/terra-project/core
 RUN git checkout $BRANCH
 
 # Build
-RUN make
+RUN make install
 
 # Final image
 FROM alpine:edge

@@ -3,7 +3,7 @@ jobs:
   build:
     environment:
       IMAGE_NAME: ryanhendricks/docker-terra
-      VERSION: v0.2.6
+      VERSION: master
     docker:
       - image: circleci/buildpack-deps:stretch
     steps:
