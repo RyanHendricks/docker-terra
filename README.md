@@ -25,7 +25,8 @@ Dockerized Terra Node with Optional Bootstrap for Fast Syncing
 The image can be run without any configuration and defaults to mainnet
 
 ```bash
-docker  run --rm -it -P --env SEEDS='0141b28d81db4e5b55736a6367cf044c35a8c29e@35:245:96:132:26656' ryanhendricks/docker-terra:latest
+
+docker  run --rm -it -P --env SEEDS='447ba60df6fdc2466e1ab4c328e100d6bc5765f8@seed-only.terra-columbus-3.bas.network:26656,6be0856f6365559fdc2e9e97a07d609f754632b0@terra-columbus-3-seed.nodes.polychainlabs.com:26656,b416f0b04e2c71b8d76f993468352030e2dcf2a9@public-seed-node.columbus.certus.one:26656,87048bf71526fb92d73733ba3ddb79b7a83ca11e@public-seed.terra.dev:26656,b5205baf1d52b6f91afb0da7d7b33dcebc71755f@public-seed2.terra.dev:26656,535222fdb795df6653934f22b8e5f16fdfacc9f6@seed.terra.de-light.io:26656,bae08cc880c20aeda68a5a890a71a9b44ac73cb4@terra-seed-eu.chorus.one:28657,925ecc3de9e2ac65a203beb2333ced1a00c135ed@terra-seed-us.chorus.one:28657' ryanhendricks/docker-terra:latest
 # Feel free to use an alternate seed node although without one the node will have issues starting
 
 ```
