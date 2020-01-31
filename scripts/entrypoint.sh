@@ -8,15 +8,15 @@ echo "setting up initial configurations"
 if [ ! -f "$TERRAD_HOME/config/config.toml" ];
 then
 
-  terrad init ${MONIKER:-nonamenode} --home=${TERRAD_HOME:-/.terrad}
+  terrad init "${MONIKER:-nonamenode}" --home="${TERRAD_HOME:-/.terrad}"
   
-  cd $TERRAD_HOME/config
+  cd "$TERRAD_HOME/config"
 
   rm genesis.json
   rm config.toml
 
   if [ ! -z "$GENESIS_URL" ]; then
-    wget $GENESIS_URL
+    wget "$GENESIS_URL"
   else
     # Mainnet
     wget https://columbus-genesis.s3-ap-northeast-1.amazonaws.com/genesis.json
@@ -343,7 +343,7 @@ EOF
 
 
 
-cd $TERRAD_HOME
+cd "$TERRAD_HOME"
 
   # if [ "$BOOTSTRAP" == "TRUE" ]; then
   #   echo "bootstrapping... this will take some time."
