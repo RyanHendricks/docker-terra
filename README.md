@@ -4,14 +4,12 @@ Dockerized Terra Node with Optional Bootstrap for Fast Syncing
 
 * * *
 
+[![CircleCI (all branches)](https://img.shields.io/circleci/build/github/RyanHendricks/docker-terra?token=e4ff41141d22bc71c6b2ad5118fd202d98dfb2dd&label=build&logo=circleci&logoColor=white)](https://circleci.com/gh/RyanHendricks/docker-terra)
+[![Codacy grade](https://img.shields.io/codacy/grade/049014a16fd948edaaa0773c246517e9.svg?logo=codacy)](https://www.codacy.com?utm_source=github.com&utm_medium=referral&utm_content=RyanHendricks/docker-terra&utm_campaign=Badge_Grade)
+
 [![MicroBadger Version](https://images.microbadger.com/badges/version/ryanhendricks/docker-terra.svg)](https://microbadger.com/images/ryanhendricks/docker-terra)
-[![CircleCI (all branches)](https://img.shields.io/circleci/project/github/RyanHendricks/docker-terra.svg?label=build&logo=circleci&logoColor=white)](https://circleci.com/gh/RyanHendricks/docker-terra)
 [![Docker Pulls](https://img.shields.io/docker/pulls/ryanhendricks/docker-terra.svg?logo=docker&logoColor=white)](https://hub.docker.com/r/ryanhendricks/docker-terra)
-
 [![MicroBadger Layers (latest)](https://img.shields.io/microbadger/layers/ryanhendricks/docker-terra/latest.svg?logo=docker&logoColor=white)](https://microbadger.com/images/ryanhendricks/docker-terra)
-[![MicroBadger Image-Size (latest)](https://img.shields.io/microbadger/image-size/ryanhendricks/docker-terra:latest.svg?logo=docker&logoColor=white)](https://microbadger.com/images/ryanhendricks/docker-terra)
-
-[![Codacy grade](https://img.shields.io/codacy/grade/c35da045d95b4f07b09948d19bacaa47.svg?logo=codacy)](https://www.codacy.com?utm_source=github.com&utm_medium=referral&utm_content=RyanHendricks/docker-terra&utm_campaign=Badge_Grade)
 
 * * *
 
