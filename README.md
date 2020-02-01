@@ -15,8 +15,8 @@ Dockerized Terra Node with Optional Bootstrap for Fast Syncing
 
 ## Prerequisites
 
--   Docker
--   Docker-Compose (optional)
+- Docker
+- Docker-Compose (optional)
 
 ## Quick Start
 
@@ -33,10 +33,10 @@ docker  run --rm -it -P --env SEEDS='447ba60df6fdc2466e1ab4c328e100d6bc5765f8@se
 
 ### Config.toml Parameters
 
--   The config.toml is created dynamically when starting the container.
--   All parameters specified in the standard config.toml file can be set using environmental variables with the same name as the config parameter but in all caps. See [entrypoint script](./scripts/entrypoint.sh) for more details.
--   If left unset the default values will be used.
--   Parameters can be set directly by modifying the config.toml portion of ./scripts/entrypoint.sh if you are cloning and building the image yourself.
+- The config.toml is created dynamically when starting the container.
+- All parameters specified in the standard config.toml file can be set using environmental variables with the same name as the config parameter but in all caps. See [entrypoint script](./scripts/entrypoint.sh) for more details.
+- If left unset the default values will be used.
+- Parameters can be set directly by modifying the config.toml portion of ./scripts/entrypoint.sh if you are cloning and building the image yourself.
 
 ### Environment Variables
 
@@ -54,12 +54,12 @@ PERSISTENT_PEERS=e6325ba7c490ba371135c9f3fcead66da1bd8cf1@terra-sentry01.dokia.c
 
 You can set ENV variables either in a docker-compose file or in the docker run command if running the container directly. If left unchanged they will default to the standard value except for the following:
 
--   MONIKER
-    -   defaults to "nonamenode"
--   CHAIN_ID
-    -   defaults to columbus-3
--   GENESIS_URL
-    -   defaults to columbus-3 github [genesis file url](https://columbus-genesis.s3-ap-northeast-1.amazonaws.com/genesis.json)
+- MONIKER
+  - defaults to "nonamenode"
+- CHAIN_ID
+  - defaults to columbus-3
+- GENESIS_URL
+  - defaults to columbus-3 github [genesis file url](https://columbus-genesis.s3-ap-northeast-1.amazonaws.com/genesis.json)
 
 ### Bootstrapping
 
@@ -124,8 +124,8 @@ curl -X GET \
 
 ## NOTES
 
--   The current SEEDS (nodes I am running and supplying here since the ones from terra/launch repo all are not working as of this update) may not be around forever so consider overriding the defaults. If the badges above have do not have block numbers for either chain that means the seed nodes are no longer with us.
--   You probably should not run a validator with this setup.
+- The current SEEDS (nodes I am running and supplying here since the ones from terra/launch repo all are not working as of this update) may not be around forever so consider overriding the defaults. If the badges above have do not have block numbers for either chain that means the seed nodes are no longer with us.
+- You probably should not run a validator with this setup.
 
 ## Contributing
 
@@ -138,3 +138,5 @@ curl -X GET \
 ## License
 
 ![GitHub](https://img.shields.io/github/license/ryanhendricks/docker-terra.svg)
+
+docker run -it --rm -v "$(pwd)":/usr/local/src/your-app ferrarimarco/github-changelog-generator -u TokenUnion -p union-marketplace --token e19f446c77a0f02675815ff42a21e72248546824
