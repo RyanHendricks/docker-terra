@@ -1,4 +1,4 @@
-author=false
+author=true
 issues=true
 exclude-labels=duplicate,question,invalid,wontfix,release
 bugs-label=**Fixed Bugs:**

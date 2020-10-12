@@ -23,10 +23,7 @@ Dockerized Terra Node with Optional Bootstrap for Fast Syncing
 The image can be run without any configuration and defaults to mainnet
 
 ```bash
-
-docker  run --rm -it -P --env SEEDS='447ba60df6fdc2466e1ab4c328e100d6bc5765f8@seed-only.terra-columbus-3.bas.network:26656,6be0856f6365559fdc2e9e97a07d609f754632b0@terra-columbus-3-seed.nodes.polychainlabs.com:26656,b416f0b04e2c71b8d76f993468352030e2dcf2a9@public-seed-node.columbus.certus.one:26656,87048bf71526fb92d73733ba3ddb79b7a83ca11e@public-seed.terra.dev:26656,b5205baf1d52b6f91afb0da7d7b33dcebc71755f@public-seed2.terra.dev:26656,535222fdb795df6653934f22b8e5f16fdfacc9f6@seed.terra.de-light.io:26656,bae08cc880c20aeda68a5a890a71a9b44ac73cb4@terra-seed-eu.chorus.one:28657,925ecc3de9e2ac65a203beb2333ced1a00c135ed@terra-seed-us.chorus.one:28657' ryanhendricks/docker-terra:latest
-# Feel free to use an alternate seed node although without one the node will have issues starting
-
+docker  run --rm -it -P ryanhendricks/docker-terra:latest
 ```
 
 ## Configuration
@@ -57,9 +54,9 @@ You can set ENV variables either in a docker-compose file or in the docker run c
 - MONIKER
   - defaults to "nonamenode"
 - CHAIN_ID
-  - defaults to columbus-3
+  - defaults to columbus-4
 - GENESIS_URL
-  - defaults to columbus-3 github [genesis file url](https://columbus-genesis.s3-ap-northeast-1.amazonaws.com/genesis.json)
+  - defaults to columbus-4 github [genesis file url](https://columbus-genesis.s3-ap-northeast-1.amazonaws.com/columbus-4-genesis.json)
 
 ### Bootstrapping
 
@@ -95,22 +92,22 @@ The image uses Supervisor to run both terrad and gaiacli simultaneously at conta
 
 ### Gaiad
 
-After starting the container you can check the status here: <http://127.0.0.1:26657/status>.
+After starting the container you can check the status [here](http://0.0.0.0:26657/status).
 
 or from the terminal
 
 ```bash
 curl -X GET \
-  http://127.0.0.1:26657/status? \
+  http://0.0.0.0:26657/status? \
   -H 'cache-control: no-cache'
 ```
 
-## Gaiacli Rest-Server
+## Terra Rest-Server
 
 Supervisor starts the rest-server with the following command:
 
 ```bash
-gaiacli rest-server --trust-node --cors * --home $GAIAD_HOME --laddr tcp://0.0.0.0:1317
+terracli rest-server --trust-node --cors * --home $TERRAD_HOME --laddr tcp://0.0.0.0:1317
 
 ```
 
@@ -118,13 +115,13 @@ You can verify that the rest-server is running using the following example
 
 ```bash
 curl -X GET \
-  http://127.0.0.1:1317/blocks/latest \
+  http://0.0.0.0:1317/blocks/latest \
   -H 'cache-control: no-cache'
 ```
 
 ## NOTES
 
-- The current SEEDS (nodes I am running and supplying here since the ones from terra/launch repo all are not working as of this update) may not be around forever so consider overriding the defaults. If the badges above have do not have block numbers for either chain that means the seed nodes are no longer with us.
+- The nightly addressbook is pulled from the Terra official upload thus no SEEDS or PERSISTENT PEERS needed at this time.
 - You probably should not run a validator with this setup.
 
 ## Contributing
@@ -138,5 +135,3 @@ curl -X GET \
 ## License
 
 ![GitHub](https://img.shields.io/github/license/ryanhendricks/docker-terra.svg)
-
-docker run -it --rm -v "$(pwd)":/usr/local/src/your-app ferrarimarco/github-changelog-generator -u TokenUnion -p union-marketplace --token e19f446c77a0f02675815ff42a21e72248546824
