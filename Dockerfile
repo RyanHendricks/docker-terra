@@ -1,54 +1,38 @@
 FROM cosmwasm/go-ext-builder:0.8.2-alpine AS rust-builder
 
-ENV PACKAGES curl make git libc-dev bash gcc linux-headers eudev-dev libusb-dev linux-headers
-ENV VERSION=v0.4.0
-ENV GO_WASM_DIR=GO_WASM_DIR=/go/src/github.com/CosmWasm/go-cosmwasm
-# Set up dependencies
-RUN apk add --no-cache $PACKAGES
-
-# Set working directory for the build
 WORKDIR /go/src/github.com/terra-project/
 
-# Add source files
-RUN git clone --recursive https://www.github.com/terra-project/core
+RUN apk update && apk add --no-cache git
+
+RUN git clone --recursive https://www.github.com/terra-project/core tmp
+RUN mkdir -p /go/src/github.com/terra-project/core/
+RUN cp /go/src/github.com/terra-project/tmp/go.* /go/src/github.com/terra-project/core/ -R
+RUN rm -r /go/src/github.com/terra-project/tmp
 WORKDIR /go/src/github.com/terra-project/core
-RUN git checkout master
 
 
-RUN apk add --no-cache git \
-    && go mod download github.com/CosmWasm/go-cosmwasm \
+RUN go mod download github.com/CosmWasm/go-cosmwasm \
     && export GO_WASM_DIR=$(go list -f "{{ .Dir }}" -m github.com/CosmWasm/go-cosmwasm) \
     && cd ${GO_WASM_DIR} \
     && cargo build --release --features backtraces --example muslc \
     && mv ${GO_WASM_DIR}/target/release/examples/libmuslc.a /lib/libgo_cosmwasm_muslc.a
 
 
-FROM golang:1.14-alpine AS build-env
+FROM cosmwasm/go-ext-builder:0.8.2-alpine AS go-builder
 
-# Modified from original terra-project/core Dockerfile
+WORKDIR /go/src/github.com/terra-project
 
-ENV PACKAGES curl make git libc-dev bash gcc linux-headers eudev-dev libusb-dev linux-headers
-ENV VERSION=v0.4.0
+RUN apk add --no-cache git libusb-dev linux-headers
 
-# Set up dependencies
-RUN apk add --no-cache $PACKAGES
+RUN git clone --recursive https://www.github.com/terra-project/core
+WORKDIR /go/src/github.com/terra-project/core
 
 COPY --from=rust-builder /lib/libgo_cosmwasm_muslc.a /lib/libgo_cosmwasm_muslc.a
 
-# Set working directory for the build
-WORKDIR /go/src/github.com/terra-project/
-
-# Add source files
-RUN git clone --recursive https://www.github.com/terra-project/core
-WORKDIR /go/src/github.com/terra-project/core
-RUN git checkout $VERSION
-
+# force it to use static lib (from above) not standard libgo_cosmwasm.so file
 RUN BUILD_TAGS=muslc make update-swagger-docs build
 
-# Build
-RUN make install
-
-# Final imagehi
+# Final image
 FROM alpine:edge
 
 
@@ -60,8 +44,8 @@ RUN mkdir -p /tmp/bin
 WORKDIR /tmp/bin
 
 # Copy over binaries from the build-env
-COPY --from=build-env /go/bin/terrad /tmp/bin
-COPY --from=build-env /go/bin/terracli /tmp/bin
+COPY --from=go-builder /go/src/github.com/terra-project/core/build/terrad /tmp/bin/terrad
+COPY --from=go-builder /go/src/github.com/terra-project/core/build/terracli /tmp/bin/terracli
 RUN install -m 0755 -o root -g root -t /usr/local/bin terrad
 RUN install -m 0755 -o root -g root -t /usr/local/bin terracli
 

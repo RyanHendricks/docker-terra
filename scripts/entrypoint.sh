@@ -17,9 +17,8 @@ then
   rm config.toml
   rm app.toml
 
-  if [ -f "$TERRAD_HOME/config/addrbook.json" ];
-  then
-  rm addrbook.json
+  if [ -f "$TERRAD_HOME/config/addrbook.json" ]; then
+      rm addrbook.json
   fi
 
   echo "downloading nightly addressbook"
@@ -31,8 +30,9 @@ then
 
   if [ ! -z "$GENESIS_URL" ]; then
       wget $GENESIS_URL
+      cp columbus-4-genesis.json genesis.json && rm columbus-4-genesis.json
   else
-      wget https://columbus-genesis.s3-ap-northeast-1.amazonaws.com/columbus-4-genesis.JSON
+      wget https://columbus-genesis.s3-ap-northeast-1.amazonaws.com/columbus-4-genesis.json
       cp columbus-4-genesis.json genesis.json && rm columbus-4-genesis.json
   fi
 
