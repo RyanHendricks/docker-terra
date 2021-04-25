@@ -1,4 +1,4 @@
-FROM cosmwasm/go-ext-builder:0.8.2-alpine AS rust-builder
+FROM cosmwasm/go-ext-builder:latest AS rust-builder
 
 WORKDIR /go/src/github.com/terra-project/
 

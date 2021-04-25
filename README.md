@@ -1,5 +1,7 @@
 # Docker-Terra
 
+## NOTICE: No Longer Maintained
+
 Dockerized Terra Node with Optional Bootstrap for Fast Syncing
 
 * * *

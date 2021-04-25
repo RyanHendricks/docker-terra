@@ -6,7 +6,7 @@
 
 **Updates:**
 
-- v1.0.0 [\#1](https://github.com/RyanHendricks/docker-terra/pull/1)
+- v1.0.0 [\#1](https://github.com/RyanHendricks/docker-terra/pull/1) ([RyanHendricks](https://github.com/RyanHendricks))
 
 ## [v1.0.0](https://github.com/RyanHendricks/docker-terra/tree/v1.0.0) (2020-01-31)
 
